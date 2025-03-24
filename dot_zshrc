@@ -1,6 +1,9 @@
 # Enable command auto-correction
 setopt CORRECT
 
+# Make emacs keybindings work inside tmux
+bindkey -e
+
 # Enable history file and append mode
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
