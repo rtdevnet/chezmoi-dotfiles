@@ -67,10 +67,9 @@ config.macos_window_background_blur = 100
 -- config.font = wezterm.font 'MonospiceKr Nerd Font'
 -- config.font = wezterm.font 'Lilex Nerd Font'
 
-config.font = wezterm.font({
-	family = "MonoLisa Nerd Font",
-	weight = "Light",
-	stretch = "UltraCondensed",
+config.font = wezterm.font_with_fallback({
+	{ family = "MonoLisa Nerd Font", weight = "Light", stretch = "UltraCondensed" },
+	"JetBrainsMono Nerd Font",
 })
 config.font_size = 12.0
 config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
