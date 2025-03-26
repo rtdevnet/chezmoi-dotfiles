@@ -1,5 +1,6 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
+local action = wezterm.action
 
 -- === Theme based on system appearance ===
 local function scheme_for_appearance(appearance)
@@ -12,7 +13,8 @@ end
 
 -- === Detect if running Neovim in pane ===
 local function is_vim(pane)
-	local process_name = pane:get_foreground_process_name()
+	-- local process_name = pane:get_foreground_process_name()
+	local process_name = string.gsub(pane:get_foreground_process_name(), "(.*[/\\])(.*)", "%2")
 	return process_name == "nvim"
 end
 
@@ -45,6 +47,16 @@ config.keys = {
 	split_nav("j"),
 	split_nav("k"),
 	split_nav("l"),
+	{
+		key = "%",
+		mods = "LEADER",
+		action = action.SplitVertical({ domain = "CurrentPaneDomain" }),
+	},
+	{
+		key = '"',
+		mods = "LEADER",
+		action = action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+	},
 }
 
 -- === Window appearance ===
