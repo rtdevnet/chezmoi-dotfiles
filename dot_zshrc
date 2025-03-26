@@ -78,9 +78,4 @@ vizsh() {
   ${EDITOR:-nano} ~/.zshrc && source ~/.zshrc
 }
 
-# Set up tmuxifier -- expects tmuxifier project cloned to ~/.tmuxifier/
-export PATH="$HOME/.tmuxifier/bin:$PATH"
-
-eval "$(tmuxifier init -)" 
-  
 eval "$(starship init zsh)"  
