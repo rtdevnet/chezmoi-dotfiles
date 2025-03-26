@@ -1,6 +1,7 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
+-- === Theme based on system appearance ===
 local function scheme_for_appearance(appearance)
 	if appearance:find("Dark") then
 		return "Catppuccin Mocha"
@@ -9,11 +10,13 @@ local function scheme_for_appearance(appearance)
 	end
 end
 
+-- === Detect if running Neovim in pane ===
 local function is_vim(pane)
 	local process_name = pane:get_foreground_process_name()
 	return process_name == "nvim"
 end
 
+-- === Pane navigation via Ctrl-h/j/k/l ===
 local direction_keys = {
 	h = "Left",
 	j = "Down",
@@ -35,11 +38,8 @@ local function split_nav(key)
 	}
 end
 
-config.leader = {
-	key = "s",
-	mods = "CTRL",
-}
-
+-- === Keybindings ===
+config.leader = { key = "s", mods = "CTRL" }
 config.keys = {
 	split_nav("h"),
 	split_nav("j"),
@@ -47,39 +47,28 @@ config.keys = {
 	split_nav("l"),
 }
 
--- config.keys = {
--- 	{ key = "%", mods = "LEADER", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
--- 	{ key = '"', mods = "LEADER", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
--- 	{ key = "h", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Left") },
--- 	{ key = "l", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Right") },
--- 	{ key = "k", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Up") },
--- 	{ key = "j", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Down") },
--- 	{ key = "c", mods = "LEADER", action = wezterm.action.SpawnTab("CurrentPaneDomain") },
--- 	{ key = "x", mods = "LEADER", action = wezterm.action.CloseCurrentPane({ confirm = true }) },
--- }
-
+-- === Window appearance ===
 config.window_background_opacity = 0.95
 config.macos_window_background_blur = 100
-
--- config.font = wezterm.font 'OverpassM Nerd Font'
--- config.font = wezterm.font 'Mononoki Nerd Font'
--- config.font = wezterm.font 'MonoLisa Nerd Font'
--- config.font = wezterm.font 'MonospiceKr Nerd Font'
--- config.font = wezterm.font 'Lilex Nerd Font'
-
-config.font = wezterm.font_with_fallback({
-	{ family = "MonoLisa Nerd Font", weight = "Light", stretch = "UltraCondensed" },
-	"JetBrainsMono Nerd Font",
-})
-config.font_size = 12.0
 config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
+config.font_size = 12.0
+config.initial_rows = 160
+config.initial_cols = 160
 
 config.window_frame = {
 	font = wezterm.font({ family = "Roboto", weight = "Bold" }),
 	font_size = 11.0,
 }
 
-config.initial_rows = 160
-config.initial_cols = 160
+-- === Hostname-based font selection ===
+local hostname = wezterm.hostname()
+
+if hostname == "powerbook" then
+	config.font = wezterm.font("MonoLisa Nerd Font")
+elseif hostname == "Workstation" then
+	config.font = wezterm.font("JetBrainsMono Nerd Font")
+else
+	config.font = wezterm.font("Monaco")
+end
 
 return config
