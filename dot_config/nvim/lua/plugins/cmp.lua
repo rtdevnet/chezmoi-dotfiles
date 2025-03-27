@@ -2,7 +2,10 @@ return {
 	-- Completion engine
 	{
 		"saghen/blink.cmp",
-		dependencies = { "rafamadriz/friendly-snippets" }, -- Optional: Provides additional snippets
+		dependencies = {
+			"rafamadriz/friendly-snippets",
+			"milanglacier/minuet-ai.nvim",
+		}, -- Optional: Provides additional snippets
 		version = "1.*", -- Use a release tag to download prebuilt binaries
 
 		-- Uncomment the following line to build from source (requires Rust nightly)
