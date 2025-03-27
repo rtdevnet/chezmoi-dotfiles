@@ -1,37 +1,41 @@
 return {
-  -- Completion engine
-  {
-    "hrsh7th/nvim-cmp",
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "L3MON4D3/LuaSnip",
-      "saadparwaiz1/cmp_luasnip",
-    },
-    config = function()
-      local cmp = require("cmp")
-      local luasnip = require("luasnip")
+	-- Completion engine
+	{
+		"saghen/blink.cmp",
+		dependencies = { "rafamadriz/friendly-snippets" }, -- Optional: Provides additional snippets
+		version = "1.*", -- Use a release tag to download prebuilt binaries
 
-      cmp.setup({
-        snippet = {
-          expand = function(args)
-            luasnip.lsp_expand(args.body)
-          end,
-        },
-        mapping = cmp.mapping.preset.insert({
-          ["<Tab>"] = cmp.mapping.select_next_item(),
-          ["<S-Tab>"] = cmp.mapping.select_prev_item(),
-          ["<CR>"] = cmp.mapping.confirm({ select = true }),
-          ["<C-Space>"] = cmp.mapping.complete(),
-        }),
-        sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-          { name = "luasnip" },
-          { name = "buffer" },
-          { name = "path" },
-        }),
-      })
-    end,
-  },
+		-- Uncomment the following line to build from source (requires Rust nightly)
+		-- build = 'cargo build --release',
+
+		opts = {
+			keymap = {
+				preset = "default",
+				["<A-y>"] = require("minuet").make_blink_map()(),
+			},
+			appearance = {
+				nerd_font_variant = "mono",
+			},
+			completion = {
+				documentation = { auto_show = false },
+				trigger = {
+					prefetch_on_insert = false,
+				},
+			},
+			sources = {
+				default = { "lsp", "path", "snippets", "buffer", "minuet" },
+				providers = {
+					minuet = {
+						name = "minuet",
+						module = "minuet.blink",
+						score_offset = 8, -- Prioritize minuet suggestions
+					},
+				},
+			},
+			fuzzy = {
+				implementation = "prefer_rust_with_warning",
+			},
+		},
+		opts_extend = { "sources.default" },
+	},
 }
