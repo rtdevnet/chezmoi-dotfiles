@@ -5,6 +5,8 @@ return {
 	},
 	{
 		"mrjones2014/smart-splits.nvim",
+		lazy = false,
+		priority = 1000,
 		config = function()
 			-- Import the smart-splits module
 			local smart_splits = require("smart-splits")

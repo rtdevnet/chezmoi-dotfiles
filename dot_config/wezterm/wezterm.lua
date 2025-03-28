@@ -24,33 +24,40 @@ wezterm.on("window-config-reloaded", function(window, pane)
 end)
 
 -- === Detect if running Neovim in pane ===
-local function is_vim(pane)
-	-- local process_name = pane:get_foreground_process_name()
-	local process_name = string.gsub(pane:get_foreground_process_name(), "(.*[/\\])(.*)", "%2")
-	return process_name == "nvim"
-end
+-- local function is_vim(pane)
+-- 	-- local process_name = pane:get_foreground_process_name()
+-- 	local full_process = pane:get_foreground_process_name()
+-- 	local process_name = string.gsub(full_process, "(.*[/\\])(.*)", "%2")
+-- 	wezterm.log_info("Full process: " .. full_process .. ", extracted: " .. process_name)
+-- 	return process_name == "nvim"
+-- end
 
--- === Pane navigation via Ctrl-h/j/k/l ===
-local direction_keys = {
-	h = "Left",
-	j = "Down",
-	k = "Up",
-	l = "Right",
-}
-
-local function split_nav(key)
-	return {
-		key = key,
-		mods = "CTRL",
-		action = wezterm.action_callback(function(win, pane)
-			if is_vim(pane) then
-				win:perform_action({ SendKey = { key = key, mods = "CTRL" } }, pane)
-			else
-				win:perform_action({ ActivatePaneDirection = direction_keys[key] }, pane)
-			end
-		end),
-	}
-end
+-- local function is_vim(pane)
+-- 	-- this is set by the plugin, and unset on ExitPre in Neovim
+-- 	return pane:get_user_vars().IS_NVIM == "true"
+-- end
+--
+-- -- === Pane navigation via Ctrl-h/j/k/l ===
+-- local direction_keys = {
+-- 	h = "Left",
+-- 	j = "Down",
+-- 	k = "Up",
+-- 	l = "Right",
+-- }
+--
+-- local function split_nav(key)
+-- 	return {
+-- 		key = key,
+-- 		mods = "CTRL",
+-- 		action = wezterm.action_callback(function(win, pane)
+-- 			if is_vim(pane) then
+-- 				win:perform_action({ SendKey = { key = key, mods = "CTRL" } }, pane)
+-- 			else
+-- 				win:perform_action({ ActivatePaneDirection = direction_keys[key] }, pane)
+-- 			end
+-- 		end),
+-- 	}
+-- end
 
 -- === Mux Domain ===
 config.unix_domains = {
@@ -74,6 +81,7 @@ config.window_frame = {
 }
 
 -- === Plugins ===
+local smart_splits = wezterm.plugin.require("https://github.com/mrjones2014/smart-splits.nvim")
 local workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
 workspace_switcher.apply_to_config(config)
 
@@ -85,10 +93,10 @@ bar.apply_to_config(config, {
 -- === Keybindings ===
 config.leader = { key = "s", mods = "CTRL" }
 config.keys = {
-	split_nav("h"),
-	split_nav("j"),
-	split_nav("k"),
-	split_nav("l"),
+	-- 	split_nav("h"),
+	-- 	split_nav("j"),
+	-- 	split_nav("k"),
+	-- 	split_nav("l"),
 	-- Tmux keys
 	{
 		key = "%",
@@ -172,6 +180,28 @@ config.keys = {
 		action = workspace_switcher.switch_to_prev_workspace(),
 	},
 }
+
+smart_splits.apply_to_config(config, {
+	-- the default config is here, if you'd like to use the default keys,
+	-- you can omit this configuration table parameter and just use
+	-- smart_splits.apply_to_config(config)
+
+	-- directional keys to use in order of: left, down, up, right
+	direction_keys = { "h", "j", "k", "l" },
+	-- if you want to use separate direction keys for move vs. resize, you
+	-- can also do this:
+	direction_keys = {
+		move = { "h", "j", "k", "l" },
+		resize = { "LeftArrow", "DownArrow", "UpArrow", "RightArrow" },
+	},
+	-- modifier keys to combine with direction_keys
+	modifiers = {
+		move = "CTRL", -- modifier to use for pane movement, e.g. CTRL+h to move left
+		resize = "META", -- modifier to use for pane resize, e.g. META+h to resize to the left
+	},
+	-- log level to use: info, warn, error
+	log_level = "info",
+})
 
 -- === Hostname-based font selection ===
 local hostname = wezterm.hostname()
