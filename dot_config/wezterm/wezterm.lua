@@ -23,49 +23,13 @@ wezterm.on("window-config-reloaded", function(window, pane)
 	end
 end)
 
--- === Detect if running Neovim in pane ===
--- local function is_vim(pane)
--- 	-- local process_name = pane:get_foreground_process_name()
--- 	local full_process = pane:get_foreground_process_name()
--- 	local process_name = string.gsub(full_process, "(.*[/\\])(.*)", "%2")
--- 	wezterm.log_info("Full process: " .. full_process .. ", extracted: " .. process_name)
--- 	return process_name == "nvim"
--- end
-
--- local function is_vim(pane)
--- 	-- this is set by the plugin, and unset on ExitPre in Neovim
--- 	return pane:get_user_vars().IS_NVIM == "true"
--- end
---
--- -- === Pane navigation via Ctrl-h/j/k/l ===
--- local direction_keys = {
--- 	h = "Left",
--- 	j = "Down",
--- 	k = "Up",
--- 	l = "Right",
--- }
---
--- local function split_nav(key)
--- 	return {
--- 		key = key,
--- 		mods = "CTRL",
--- 		action = wezterm.action_callback(function(win, pane)
--- 			if is_vim(pane) then
--- 				win:perform_action({ SendKey = { key = key, mods = "CTRL" } }, pane)
--- 			else
--- 				win:perform_action({ ActivatePaneDirection = direction_keys[key] }, pane)
--- 			end
--- 		end),
--- 	}
--- end
-
 -- === Mux Domain ===
-config.unix_domains = {
-	{
-		name = "unix",
-	},
-}
-config.default_gui_startup_args = { "connect", "unix" }
+-- config.unix_domains = {
+-- 	{
+-- 		name = "unix",
+-- 	},
+-- }
+-- config.default_gui_startup_args = { "connect", "unix" }
 
 -- === Window appearance ===
 config.window_background_opacity = 0.95

@@ -1,41 +1,103 @@
+-- Configuration for CodeCompanion and Which-Key integration
+-- CodeCompanion is an AI-powered coding assistant for Neovim that provides:
+-- 1. Chat interface for asking questions about code
+-- 2. Inline code suggestions and explanations
+-- 3. Code refactoring, documentation, and test generation
 return {
 	{
 		"olimorris/codecompanion.nvim",
-		config = true,
+		lazy = false, -- Load immediately, don't lazy-load
+		priority = 100, -- High priority to ensure it loads early
+		event = "VeryLazy", -- Still wait for VeryLazy event before initializing
+		config = function(_, opts)
+			require("codecompanion").setup(opts)
+		end,
 		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-treesitter/nvim-treesitter",
+			"nvim-lua/plenary.nvim", -- Utility functions library
+			"nvim-treesitter/nvim-treesitter", -- For code parsing and analysis
 		},
 		opts = {
 			strategies = {
 				chat = {
-					adapter = "anthropic",
-				},
-				inline = {
-					adapter = "anthropic",
-				},
-				display = {
-					chat = {
-						show_settings = true,
-						render_headers = false,
+					adapter = "anthropic", -- Using Claude AI model for chat functionality
+					-- Custom slash commands available in the chat interface
+					slash_commands = {
+						["file"] = {
+							-- Command to include file content in the chat
+							callback = "strategies.chat.slash_commands.file",
+							description = "Select a file using Snacks Explorer",
+							opts = {
+								provider = "snacks", -- File picker provider (alternatives: 'default', 'mini_pick', 'fzf_lua')
+								contains_code = true,
+							},
+						},
+						["explain"] = {
+							callback = "strategies.chat.slash_commands.explain",
+							description = "Explain the selected code",
+						},
+						["refactor"] = {
+							callback = "strategies.chat.slash_commands.refactor",
+							description = "Refactor the selected code",
+						},
+						["tests"] = {
+							callback = "strategies.chat.slash_commands.tests",
+							description = "Generate tests for the selected code",
+						},
+						["lint"] = {
+							callback = "strategies.chat.slash_commands.lint",
+							description = "Lint and improve the selected code",
+						},
+						["search"] = {
+							callback = "strategies.chat.slash_commands.search",
+							description = "Search for something in your codebase",
+							opts = {
+								provider = "snacks", -- Using Snacks for search interface
+							},
+						},
 					},
 				},
+				inline = {
+					adapter = "anthropic", -- Using Claude for inline suggestions
+					auto_submit = true, -- Automatically submit inline queries
+					open_chat = false, -- Don't open chat window for inline queries
+				},
+			},
+			display = {
+				chat = {
+					show_settings = true, -- Show settings button in chat UI
+					render_headers = true, -- Show message headers in chat UI
+				},
+			},
+			-- Chat history persistence configuration
+			history = {
+				enabled = true, -- Enable saving chat history
+				save_directory = vim.fn.stdpath("data") .. "/codecompanion/", -- Save in Neovim's data directory
+				save_on_exit = true, -- Save history when exiting Neovim
+				auto_load_last = true, -- Automatically load last chat on startup
 			},
 		},
+		-- Keymaps for accessing CodeCompanion functionality
+		-- All commands are under <leader>ac prefix (except toggle)
 		keys = {
 			{ "<leader>aca", "<cmd>CodeCompanionActions<cr>", mode = { "n", "v" }, desc = "Action Palette" },
 			{ "<leader>acc", "<cmd>CodeCompanionChat<cr>", mode = { "n", "v" }, desc = "New Chat" },
 			{ "<leader>acA", "<cmd>CodeCompanionAdd<cr>", mode = "v", desc = "Add Code" },
 			{ "<leader>aci", "<cmd>CodeCompanion<cr>", mode = "n", desc = "Inline Prompt" },
-			{ "<leader>acC", "<cmd>CodeCompanionToggle<cr>", mode = "n", desc = "Toggle Chat" },
+			{ "<leader>at", "<cmd>CodeCompanionChat Toggle<cr>", mode = "n", desc = "Toggle Chat" },
+			{ "<leader>acr", "<cmd>CodeCompanion /review<cr>", mode = "v", desc = "Code Review" },
+			{ "<leader>ace", "<cmd>CodeCompanion /explain<cr>", mode = "v", desc = "Explain Code" },
+			{ "<leader>act", "<cmd>CodeCompanion /tests<cr>", mode = "v", desc = "Generate Tests" },
+			{ "<leader>acd", "<cmd>CodeCompanion /docs<cr>", mode = "v", desc = "Generate Docs" },
 		},
 	},
 	{
+		-- Which-Key integration to display CodeCompanion commands in a popup menu
 		"folke/which-key.nvim",
-		opts = {
-			spec = {
-				{ "<leader>", group = "ac", icon = "󱚦 ", mode = { "n", "v" } },
-			},
-		},
+		opts = function(_, opts)
+			if opts.defaults then
+				-- Register CodeCompanion category in Which-Key under <leader>ac prefix
+				opts.defaults["<leader>ac"] = { name = "CodeCompanion" }
+			end
+		end,
 	},
 }

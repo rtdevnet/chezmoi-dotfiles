@@ -12,6 +12,7 @@ return {
 					"lua_ls",
 					"gopls",
 					"pyright",
+					"ansiblels",
 				},
 				automatic_installation = true,
 			})
@@ -57,6 +58,7 @@ return {
 				end
 				map("n", "gd", vim.lsp.buf.definition, "Go to definition")
 				map("n", "K", vim.lsp.buf.hover, "Hover info")
+				map("n", "<leader>ca", vim.lsp.buf.code_action, "Code action")
 			end
 
 			for server, config in pairs(opts.servers) do

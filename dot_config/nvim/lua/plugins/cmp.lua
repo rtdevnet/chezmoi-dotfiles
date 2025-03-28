@@ -1,3 +1,11 @@
+local has_words_before = function()
+	if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
+		return false
+	end
+	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+	return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
+end
+
 return {
 	-- Completion engine
 	{
@@ -7,6 +15,7 @@ return {
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-path",
 			"L3MON4D3/LuaSnip",
+			"rafamadriz/friendly-snippets",
 			"saadparwaiz1/cmp_luasnip",
 		},
 		config = function()
@@ -20,7 +29,14 @@ return {
 					end,
 				},
 				mapping = cmp.mapping.preset.insert({
-					["<Tab>"] = cmp.mapping.select_next_item(),
+					["<Tab>"] = vim.schedule_wrap(function(fallback)
+						if cmp.visible() and has_words_before() then
+							cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+						else
+							fallback()
+						end
+					end),
+					-- ["<Tab>"] = cmp.mapping.select_next_item(),
 					["<S-Tab>"] = cmp.mapping.select_prev_item(),
 					["<CR>"] = cmp.mapping.confirm({ select = true }),
 					["<C-Space>"] = cmp.mapping.complete(),
@@ -33,7 +49,6 @@ return {
 				}),
 				formatting = {
 					format = function(entry, vim_item)
-						-- Source icon						-- Kind icons (for completion item types)
 						local kind_icons = {
 							Text = "󰉿",
 							Method = "󰆧",
@@ -72,10 +87,8 @@ return {
 							supermaven = "󰠮", -- Brain icon
 						}
 						-- Add source icon
-						-- vim_item.kind = vim_item.kind .. " " .. (source_icons[entry.source.name] or "")
 						vim_item.kind = string.format("%s %s", kind_icons[vim_item.kind] or "", vim_item.kind)
 						-- Add source name
-						--
 						vim_item.menu = string.format("%s %s", source_icons[entry.source.name] or "", ({
 							nvim_lsp = "[LSP]",
 							luasnip = "[Snippet]",

@@ -1,21 +1,25 @@
-local opt = vim.opt
+local o = vim.o
 
-opt.statuscolumn = [[%!v:lua.require'snacks.statuscolumn'.get()]]
-opt.number = true
-opt.relativenumber = true
-opt.mouse = "a"
-opt.termguicolors = true
-opt.updatetime = 300
-opt.scrolloff = 8
-opt.sidescrolloff = 8
-opt.wrap = false
-opt.cursorline = true
+o.fileencoding = "utf-8"
+o.showmode = false
+o.statuscolumn = [[%!v:lua.require'snacks.statuscolumn'.get()]]
+o.number = true
+o.relativenumber = true
+o.mouse = "a"
+o.termguicolors = true
+o.updatetime = 300
+o.scrolloff = 8
+o.sidescrolloff = 8
+o.wrap = false
+o.cursorline = true
+o.signcolumn = "yes:2"
+o.timeoutlen = 200
 
-opt.tabstop = 2
-opt.softtabstop = 2
-opt.shiftwidth = 2
-opt.expandtab = true
-opt.smartindent = true
+o.tabstop = 2
+o.softtabstop = 2
+o.shiftwidth = 2
+o.expandtab = true
+o.smartindent = true
 
-opt.splitright = true
-opt.splitbelow = true
+o.splitright = true
+o.splitbelow = true
