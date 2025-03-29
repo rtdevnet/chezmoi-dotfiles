@@ -83,4 +83,4 @@ source <(fzf --zsh)
 
 eval "$(starship init zsh)"  
 eval "$(zoxide init zsh)"  
-eval "$(chezmoi init zsh)"  
+eval "$(chezmoi completion zsh)"  
