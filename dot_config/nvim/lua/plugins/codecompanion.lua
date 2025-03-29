@@ -5,6 +5,10 @@
 -- 3. Code refactoring, documentation, and test generation
 return {
 	{
+		"MeanderingProgrammer/render-markdown.nvim",
+		ft = { "markdown", "codecompanion" },
+	},
+	{
 		"olimorris/codecompanion.nvim",
 		lazy = false, -- Load immediately, don't lazy-load
 		priority = 100, -- High priority to ensure it loads early
@@ -66,6 +70,7 @@ return {
 				chat = {
 					show_settings = true, -- Show settings button in chat UI
 					render_headers = true, -- Show message headers in chat UI
+					auto_scroll = true,
 				},
 			},
 			-- Chat history persistence configuration
@@ -88,6 +93,15 @@ return {
 			{ "<leader>ace", "<cmd>CodeCompanion /explain<cr>", mode = "v", desc = "Explain Code" },
 			{ "<leader>act", "<cmd>CodeCompanion /tests<cr>", mode = "v", desc = "Generate Tests" },
 			{ "<leader>acd", "<cmd>CodeCompanion /docs<cr>", mode = "v", desc = "Generate Docs" },
+			{ "<leader>acf", "<cmd>CodeCompanion /fix<cr>", mode = "v", desc = "Fix Code Issues" },
+			{ "<leader>aco", "<cmd>CodeCompanion /optimize<cr>", mode = "v", desc = "Optimize Code" },
+			{ "<leader>acR", "<cmd>CodeCompanion /refactor<cr>", mode = "v", desc = "Refactor Code" },
+			{ "<leader>acs", "<cmd>CodeCompanion /simplify<cr>", mode = "v", desc = "Simplify Code" },
+			{ "<leader>acC", "<cmd>CodeCompanion /convert<cr>", mode = "v", desc = "Convert Code" },
+			{ "<leader>acj", "<cmd>CodeCompanion /json<cr>", mode = "v", desc = "Generate JSON" },
+			{ "<leader>acp", "<cmd>CodeCompanion /performance<cr>", mode = "v", desc = "Performance Analysis" },
+			{ "<leader>acg", "<cmd>CodeCompanion /generate<cr>", mode = "v", desc = "Generate Implementation" },
+			{ "<leader>acv", "<cmd>CodeCompanion /vulnerabilities<cr>", mode = "v", desc = "Security Analysis" },
 		},
 	},
 	{
