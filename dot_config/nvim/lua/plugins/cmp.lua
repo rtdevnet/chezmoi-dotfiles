@@ -21,8 +21,45 @@ return {
 		config = function()
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
+			-- Define filetypes where cmp should be disabled
+			local disabled_filetypes = {
+				-- AI assistants
+				codecompanion = true,
+
+				-- Common filetypes where completion is often unwanted
+				TelescopePrompt = true,
+				prompt = true,
+				markdown = true,
+				gitcommit = true,
+				text = true,
+
+				-- Vim-specific
+				help = true,
+				vim = true,
+
+				-- Terminal-related
+				["neo-tree-popup"] = true,
+				["dap-repl"] = true,
+			}
 
 			cmp.setup({
+				enabled = function()
+					local buftype = vim.api.nvim_buf_get_option(0, "buftype")
+					local filetype = vim.api.nvim_buf_get_option(0, "filetype")
+
+					-- Disable for specific filetypes
+					if disabled_filetypes[filetype] then
+						return false
+					end
+
+					-- Disable for special buffer types
+					if buftype == "prompt" or buftype == "nofile" then
+						return false
+					end
+
+					return true
+				end,
+
 				snippet = {
 					expand = function(args)
 						luasnip.lsp_expand(args.body)
