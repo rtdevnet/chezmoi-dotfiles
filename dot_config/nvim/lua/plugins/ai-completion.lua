@@ -1,9 +1,4 @@
 return {
-	-- {
-	-- 	"nvim-lua/plenary.nvim", -- required by codeium
-	-- 	lazy = false, -- load immediately
-	-- },
-
 	-- Helper to toggle AI sources
 	{
 		"nvim-lua/plenary.nvim",
