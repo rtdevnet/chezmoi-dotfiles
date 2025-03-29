@@ -20,7 +20,10 @@ return {
 	},
 	{
 		"neovim/nvim-lspconfig",
-		dependencies = { "saghen/blink.cmp" },
+		dependencies = {
+			"hrsh7th/nvim-cmp",
+			"hrsh7th/cmp-nvim-lsp",
+		},
 		opts = {
 			servers = {
 				-- lua (for Neovim and Wezterm config files)
@@ -61,11 +64,13 @@ return {
 				map("n", "<leader>ca", vim.lsp.buf.code_action, "Code action")
 			end
 
+			-- Get default capabilities from cmp_nvim_lsp
+			local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
 			for server, config in pairs(opts.servers) do
-				-- passing config.capabilities to blink.cmp merges with the capabilities in your
-				-- `opts[server].capabilities, if you've defined it
 				config.on_attach = on_attach
-				config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
+				-- Merge capabilities with any server-specific ones
+				config.capabilities = vim.tbl_deep_extend("force", capabilities, config.capabilities or {})
 				lspconfig[server].setup(config)
 			end
 		end,
