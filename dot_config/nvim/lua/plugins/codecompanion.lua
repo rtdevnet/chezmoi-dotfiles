@@ -35,27 +35,36 @@ return {
 								contains_code = true,
 							},
 						},
-						["explain"] = {
-							callback = "strategies.chat.slash_commands.explain",
-							description = "Explain the selected code",
-						},
-						["refactor"] = {
-							callback = "strategies.chat.slash_commands.refactor",
-							description = "Refactor the selected code",
-						},
-						["tests"] = {
-							callback = "strategies.chat.slash_commands.tests",
-							description = "Generate tests for the selected code",
-						},
-						["lint"] = {
-							callback = "strategies.chat.slash_commands.lint",
-							description = "Lint and improve the selected code",
-						},
-						["search"] = {
-							callback = "strategies.chat.slash_commands.search",
-							description = "Search for something in your codebase",
+						["help"] = {
+							-- Command to get help on a topic
+							callback = "strategies.chat.slash_commands.help",
+							description = "Get help on a topic",
 							opts = {
-								provider = "snacks", -- Using Snacks for search interface
+								provider = "snacks", -- File picker provider (alternatives: 'default', 'mini_pick', 'fzf_lua')
+							},
+						},
+						["terminal"] = {
+							-- Command to run terminal commands
+							callback = "strategies.chat.slash_commands.terminal",
+							description = "Run terminal commands",
+							opts = {
+								provider = "snacks", -- File picker provider (alternatives: 'default', 'mini_pick', 'fzf_lua')
+							},
+						},
+						["symbols"] = {
+							-- Command to list symbols in the current buffer
+							callback = "strategies.chat.slash_commands.symbols",
+							description = "List symbols in the current buffer",
+							opts = {
+								provider = "snacks", -- File picker provider (alternatives: 'default', 'mini_pick', 'fzf_lua')
+							},
+						},
+						["workspace"] = {
+							-- Command to list symbols in the current buffer
+							callback = "strategies.chat.slash_commands.workspace",
+							description = "List symbols in the current workspace",
+							opts = {
+								provider = "snacks", -- File picker provider (alternatives: 'default', 'mini_pick', 'fzf_lua')
 							},
 						},
 					},

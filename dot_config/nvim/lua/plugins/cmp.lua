@@ -1,3 +1,5 @@
+-- @diagnostic disable: undefined-global
+local unpack = unpack or table.unpack
 local has_words_before = function()
 	if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
 		return false
@@ -67,12 +69,28 @@ return {
 				},
 				mapping = cmp.mapping.preset.insert({
 					["<Tab>"] = vim.schedule_wrap(function(fallback)
-						if cmp.visible() and has_words_before() then
-							cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+						if cmp.visible() then
+							local entry = cmp.get_selected_entry()
+							if entry then
+								cmp.confirm({ select = false })
+							elseif has_words_before() then
+								cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+							else
+								fallback()
+							end
+						elseif luasnip.expand_or_jumpable() then
+							luasnip.expand_or_jump()
 						else
 							fallback()
 						end
 					end),
+					-- ["<Tab>"] = vim.schedule_wrap(function(fallback)
+					-- 	if cmp.visible() and has_words_before() then
+					-- 		cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+					-- 	else
+					-- 		fallback()
+					-- 	end
+					-- end),
 					-- ["<Tab>"] = cmp.mapping.select_next_item(),
 					["<S-Tab>"] = cmp.mapping.select_prev_item(),
 					["<CR>"] = cmp.mapping.confirm({ select = true }),
@@ -123,9 +141,27 @@ return {
 							copilot = "", -- GitHub-like icon
 							supermaven = "󰠮", -- Brain icon
 						}
-						-- Add source icon
-						vim_item.kind = string.format("%s %s", kind_icons[vim_item.kind] or "", vim_item.kind)
-						-- Add source name
+
+						local max_length = 50
+						if vim_item.abbr and #vim_item.abbr > max_length then
+							vim_item.abbr = vim_item.abbr:sub(1, max_length - 1) .. "…"
+						end
+
+						local label_len = #entry.completion_item.label
+						if
+							(
+								entry.source.name == "copilot"
+								or entry.source.name == "codeium"
+								or entry.source.name == "supermaven"
+							) and label_len > 50
+						then
+							vim_item.kind = "📄 " .. vim_item.kind
+						elseif entry.source.name == "luasnip" and label_len > 40 then
+							vim_item.kind = "🧩 " .. vim_item.kind
+						else
+							vim_item.kind = string.format("%s %s", kind_icons[vim_item.kind] or "", vim_item.kind)
+						end
+
 						vim_item.menu = string.format("%s %s", source_icons[entry.source.name] or "", ({
 							nvim_lsp = "[LSP]",
 							luasnip = "[Snippet]",
@@ -135,10 +171,10 @@ return {
 							copilot = "[Copilot]",
 							supermaven = "[Supermaven]",
 						})[entry.source.name] or entry.source.name)
+
 						return vim_item
 					end,
 				},
-
 				window = {
 					completion = cmp.config.window.bordered(),
 					documentation = cmp.config.window.bordered(),

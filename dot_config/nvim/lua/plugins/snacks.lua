@@ -2,7 +2,7 @@ return {
 	"folke/snacks.nvim",
 	priority = 1000,
 	lazy = false,
-	--- ---@type snacks.Config
+	---@type snacks.Config
 	opts = {
 		bigfile = { enabled = true },
 		dashboard = { enabled = true },
@@ -33,7 +33,7 @@ return {
 		words = { enabled = true },
 		styles = {
 			notification = {
-				-- wo = { wrap = true } -- Wrap notifications
+				wo = { wrap = true }, -- Wrap notifications
 			},
 		},
 	},
@@ -49,7 +49,11 @@ return {
 		{
 			"<leader>,",
 			function()
-				require("snacks").picker.buffers()
+				require("snacks").picker.buffers({
+					on_show = function()
+						vim.cmd.stopinsert()
+					end,
+				})
 			end,
 			desc = "Buffers",
 		},
