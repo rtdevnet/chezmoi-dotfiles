@@ -15,6 +15,11 @@ setopt HIST_IGNORE_ALL_DUPS  # Auto-remove duplicate entries in history
 setopt HIST_IGNORE_SPACE  # Ignore commands that start with a space from history
 setopt HIST_REDUCE_BLANKS  # Remove blank lines from history
 
+# Load brew shellenv in interactive shells too
+if command -v brew &>/dev/null; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
 # Improve tab completion experience
 autoload -Uz compinit
 compinit
@@ -30,8 +35,11 @@ zstyle ':completion:*' list-colors '=(#b)black=31'  # Colorize matches
 setopt EXTENDED_GLOB
 
 # Aliases for convenience
-alias ll='ls -lh'
-alias la='ls -lha'
+# alias ll='ls -lh'
+# alias la='ls -lha'
+alias ls='eza --icons --group-directories-first'
+alias ll='eza -lh --icons --git'
+alias "ls -lsa"='eza -lah --icons'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias gs="git status"
@@ -57,6 +65,7 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 export EDITOR="nvim"
 export VISUAL="$EDITOR"
 export PAGER="less"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # Set a simple but informative prompt
 PROMPT='%F{cyan}%n@%m%f %F{yellow}%~%f %# '
