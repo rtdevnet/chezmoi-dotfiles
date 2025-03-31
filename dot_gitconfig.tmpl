@@ -1,0 +1,27 @@
+[user]
+	email = {{ .email }}
+	name = {{ .name }}
+
+[core]
+	pager = delta --features "$(defaults read -globalDomain AppleInterfaceStyle &> /dev/null && echo dark-mode || echo light-mode)"
+
+[interactive]
+	diffFilter = delta --color-only
+
+[include]
+  path = ~/.config/delta/themes/catppuccin.gitconfig
+
+[delta]
+  navigate = true
+  side-by-side = true
+  line-numbers = true
+
+[delta "light-mode"]
+  features = catppuccin-latte
+
+[delta "dark-mode"]
+  features = catppuccin-mocha
+
+[merge]
+  conflictstyle = zdiff3
+
