@@ -68,7 +68,9 @@ export PAGER="less"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # Set a simple but informative prompt
-PROMPT='%F{cyan}%n@%m%f %F{yellow}%~%f %# '
+#PROMPT='%F{cyan}%n@%m%f %F{yellow}%~%f %# '
+autoload -U promptinit; promptinit
+prompt pure
 
 # Enable smart spelling correction for commands
 SPROMPT='Correct "%R" to "%r"? [Yes, No, Abort, Edit]'
@@ -87,9 +89,22 @@ vizsh() {
   ${EDITOR:-nano} ~/.zshrc && source ~/.zshrc
 }
 
+# Set DARKMODE on every zsh cmd
+function update_terminal_theme_env {
+  export DARKMODE=$(
+    osascript -e 'tell application "System Events" to tell appearance preferences to get dark mode' |
+    awk '{ print ($1 == "true") ? 1 : 0 }'
+  )
+}
+
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd update_terminal_theme_env
+# add-zsh-hook preexec update_terminal_theme_env
+
 # Set up fzf key bindings and fuzzy completion
 source <(fzf --zsh)
 
-eval "$(starship init zsh)"  
+# eval "$(starship init zsh)"  
 eval "$(zoxide init zsh)"  
 eval "$(chezmoi completion zsh)"  
+
