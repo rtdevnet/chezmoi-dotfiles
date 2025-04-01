@@ -12,8 +12,16 @@ local function scheme_for_appearance(appearance)
 	end
 end
 
+-- === Get colors of color_scheme ===
+local function get_current_colors()
+	local appearance = wezterm.gui.get_appearance()
+	local scheme_name = scheme_for_appearance(appearance)
+
+	return wezterm.color.get_builtin_schemes()[scheme_name] or {}
+end
+
 -- === Ensure right theme is selected on new workspace ===
-wezterm.on("window-config-reloaded", function(window, pane)
+wezterm.on("window-config-reloaded", function(window)
 	local overrides = window:get_config_overrides() or {}
 	local appearance = window:get_appearance()
 	local scheme = scheme_for_appearance(appearance)
@@ -23,13 +31,16 @@ wezterm.on("window-config-reloaded", function(window, pane)
 	end
 end)
 
--- === Mux Domain ===
--- config.unix_domains = {
--- 	{
--- 		name = "unix",
--- 	},
--- }
--- config.default_gui_startup_args = { "connect", "unix" }
+-- === Hostname-based font selection ===
+local hostname = wezterm.hostname()
+
+if hostname == "powerbook" then
+	config.font = wezterm.font("MonoLisa Nerd Font")
+elseif hostname == "Workstation" then
+	config.font = wezterm.font("JetBrainsMono Nerd Font")
+else
+	config.font = wezterm.font("Monaco")
+end
 
 -- === Window appearance ===
 config.window_background_opacity = 0.95
@@ -38,20 +49,78 @@ config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
 config.font_size = 12.0
 config.initial_rows = 160
 config.initial_cols = 160
+config.use_fancy_tab_bar = false
 
 config.window_frame = {
-	font = wezterm.font({ family = "Roboto", weight = "Bold" }),
-	font_size = 11.0,
+	font = config.font,
+	font_size = 12.0,
 }
+
+local colors = get_current_colors()
+print("Background color is ", colors.background)
 
 -- === Plugins ===
 local smart_splits = wezterm.plugin.require("https://github.com/mrjones2014/smart-splits.nvim")
-local workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
-workspace_switcher.apply_to_config(config)
-
-local bar = wezterm.plugin.require("https://github.com/adriankarlen/bar.wezterm")
-bar.apply_to_config(config, {
-	position = "top",
+local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
+tabline.setup({
+	options = {
+		-- theme = scheme_for_appearance(wezterm.gui.get_appearance()),
+		component_separators = {
+			left = "",
+			right = "",
+		},
+		section_separators = {
+			left = "",
+			right = "",
+		},
+		tab_separators = {
+			left = "",
+			right = "",
+		},
+		theme_overrides = {
+			normal_mode = {
+				a = { fg = colors.background, bg = colors.ansi[7] },
+				b = { fg = colors.indexed[59], bg = colors.background },
+				c = { fg = colors.indexed[59], bg = colors.background },
+			},
+			copy_mode = {
+				a = { fg = colors.background, bg = colors.ansi[4] },
+				b = { fg = colors.ansi[4], bg = colors.background },
+				c = { fg = colors.foreground, bg = colors.background },
+			},
+			search_mode = {
+				a = { fg = colors.background, bg = colors.ansi[3] },
+				b = { fg = colors.ansi[3], bg = colors.background },
+				c = { fg = colors.foreground, bg = colors.background },
+			},
+			-- Defining colors for a new key table
+			window_mode = {
+				a = { fg = colors.background, bg = colors.ansi[6] },
+				b = { fg = colors.ansi[6], bg = colors.background },
+				c = { fg = colors.foreground, bg = colors.background },
+			},
+			-- Default tab colors
+			tab = {
+				active = { fg = colors.ansi[6], bg = colors.background },
+				inactive = { fg = colors.indexed[59], bg = colors.background },
+				inactive_hover = { fg = colors.ansi[6], bg = colors.background },
+			},
+		},
+	},
+	sections = {
+		tabline_a = { { Text = " " .. wezterm.nerdfonts.md_alpha_w_box_outline }, "mode" }, -- Left section
+		tabline_b = { "workspace" }, -- Left-middle section
+		tabline_c = {}, -- Center section
+		tab_active = {
+			"process",
+		},
+		tab_inactive = {
+			"process",
+		},
+		tabline_x = {}, -- Right-middle section
+		tabline_y = { "hostname", { Text = "|" }, "domain" }, -- Right section
+		tabline_z = { "datetime" }, -- Far-right section
+	},
 })
 
 -- === Keybindings ===
@@ -132,17 +201,6 @@ config.keys = {
 		mods = "LEADER",
 		action = action.DetachDomain({ DomainName = "unix" }),
 	},
-	-- Workspace Switcher plugin
-	{
-		key = "s",
-		mods = "LEADER",
-		action = workspace_switcher.switch_workspace(),
-	},
-	{
-		key = "S",
-		mods = "LEADER",
-		action = workspace_switcher.switch_to_prev_workspace(),
-	},
 }
 
 smart_splits.apply_to_config(config, {
@@ -166,16 +224,5 @@ smart_splits.apply_to_config(config, {
 	-- log level to use: info, warn, error
 	log_level = "info",
 })
-
--- === Hostname-based font selection ===
-local hostname = wezterm.hostname()
-
-if hostname == "powerbook" then
-	config.font = wezterm.font("MonoLisa Nerd Font")
-elseif hostname == "Workstation" then
-	config.font = wezterm.font("JetBrainsMono Nerd Font")
-else
-	config.font = wezterm.font("Monaco")
-end
 
 return config
