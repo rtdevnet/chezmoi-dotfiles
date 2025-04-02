@@ -15,9 +15,15 @@ setopt HIST_IGNORE_ALL_DUPS  # Auto-remove duplicate entries in history
 setopt HIST_IGNORE_SPACE  # Ignore commands that start with a space from history
 setopt HIST_REDUCE_BLANKS  # Remove blank lines from history
 
-# Load brew shellenv in interactive shells too
+# Load Homebrew shell environment (adds brew to PATH, MANPATH, etc.)
 if command -v brew &>/dev/null; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
+
+  # Ensure Homebrew's site-functions is in fpath
+  hb_zsf="/opt/homebrew/share/zsh/site-functions"
+  if [[ -d $hb_zsf && ${fpath[(i)$hb_zsf]} -gt ${#fpath} ]]; then
+    fpath=($hb_zsf $fpath)
+  fi
 fi
 
 # Improve tab completion experience
