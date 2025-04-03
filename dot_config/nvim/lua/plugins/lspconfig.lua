@@ -31,8 +31,17 @@ return {
 					-- on_attach = on_attach,
 					settings = {
 						Lua = {
+							runtime = {
+								version = "LuaJIT",
+							},
 							diagnostics = {
-								globals = { "vim" },
+								globals = { "vim", "wezterm" }, -- <== WezTerm support
+							},
+							workspace = {
+								library = {
+									vim.fn.expand("~/.config/nvim/lua/wezterm-types"), -- <== wezterm-types folder
+								},
+								checkThirdParty = false,
 							},
 						},
 					},
