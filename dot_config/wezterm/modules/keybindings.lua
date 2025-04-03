@@ -6,6 +6,10 @@ local mux = wezterm.mux
 local M = {}
 
 function M.get_keys(plugins)
+	-- local resurrect = plugins.resurrect.plugin
+	-- local w_switcher = plugins.workspace_switcher.plugin
+	-- local sessionizer = plugins.sessionizer.plugin
+
 	return {
 		{
 			key = "%",
@@ -74,40 +78,56 @@ function M.get_keys(plugins)
 			mods = "LEADER",
 			action = action.DetachDomain({ DomainName = "unix" }),
 		},
-		-- Resurrect keybindings
-		{
-			key = "w",
-			mods = "LEADER",
-			action = wezterm.action_callback(function(win, pane)
-				plugins.resurrect.state_manager.save_state(plugins.resurrect.workspace_state.get_workspace_state())
-			end),
-		},
-		{
-			key = "r",
-			mods = "LEADER",
-			action = wezterm.action_callback(function(win, pane)
-				plugins.resurrect.fuzzy_loader.fuzzy_load(win, pane, function(id, label)
-					local type = string.match(id, "^([^/]+)") -- match before '/'
-					id = string.match(id, "([^/]+)$") -- match after '/'
-					id = string.match(id, "(.+)%..+$") -- remove file extention
-					local opts = {
-						relative = true,
-						restore_text = true,
-						on_pane_restore = plugins.resurrect.tab_state.default_on_pane_restore,
-					}
-					if type == "workspace" then
-						local state = plugins.resurrect.state_manager.load_state(id, "workspace")
-						plugins.resurrect.workspace_state.restore_workspace(state, opts)
-					elseif type == "window" then
-						local state = plugins.resurrect.state_manager.load_state(id, "window")
-						plugins.resurrect.window_state.restore_window(pane:window(), state, opts)
-					elseif type == "tab" then
-						local state = plugins.resurrect.state_manager.load_state(id, "tab")
-						plugins.resurrect.tab_state.restore_tab(pane:tab(), state, opts)
-					end
-				end)
-			end),
-		},
+		-- -- Resurrect keybindings
+		-- {
+		-- 	key = "w",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action_callback(function(win, pane)
+		-- 		resurrect.state_manager.save_state(resurrect.workspace_state.get_workspace_state())
+		-- 	end),
+		-- },
+		-- {
+		-- 	key = "r",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action_callback(function(win, pane)
+		-- 		resurrect.fuzzy_loader.fuzzy_load(win, pane, function(id, label)
+		-- 			local type = string.match(id, "^([^/]+)") -- match before '/'
+		-- 			id = string.match(id, "([^/]+)$") -- match after '/'
+		-- 			id = string.match(id, "(.+)%..+$") -- remove file extention
+		-- 			local opts = {
+		-- 				relative = true,
+		-- 				restore_text = true,
+		-- 				on_pane_restore = resurrect.tab_state.default_on_pane_restore,
+		-- 			}
+		-- 			if type == "workspace" then
+		-- 				local state = resurrect.state_manager.load_state(id, "workspace")
+		-- 				resurrect.workspace_state.restore_workspace(state, opts)
+		-- 			elseif type == "window" then
+		-- 				local state = resurrect.state_manager.load_state(id, "window")
+		-- 				resurrect.window_state.restore_window(pane:window(), state, opts)
+		-- 			elseif type == "tab" then
+		-- 				local state = resurrect.state_manager.load_state(id, "tab")
+		-- 				resurrect.tab_state.restore_tab(pane:tab(), state, opts)
+		-- 			end
+		-- 		end)
+		-- 	end),
+		-- },
+		-- {
+		-- 	key = "w",
+		-- 	mods = "LEADER",
+		-- 	action = w_switcher.switch_workspace(),
+		-- },
+		-- {
+		-- 	key = "s",
+		-- 	mods = "LEADER",
+		-- 	action = sessionizer.show,
+		-- },
+		-- {
+		-- 	key = "S",
+		-- 	mods = "LEADER|SHIFT",
+		-- 	action = sessionizer.switch_to_most_recent,
+		-- },
+
 		-- Sessionizer keybindings
 		-- {
 		-- 	key = "m",

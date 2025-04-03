@@ -3,26 +3,26 @@
 local wezterm = require("wezterm")
 
 local plugin_sources = {
-	workspace_switcher = {
-		url = "https://github.com/MLFlexer/smart_workspace_switcher.wezterm",
-		setup = "apply_to_config", -- or "setup"
-	},
-	resurrect = {
-		url = "https://github.com/MLFlexer/resurrect.wezterm",
-		setup = "apply_to_config",
-	},
-	sessionizer_plugin = {
-		url = "https://github.com/mikkasendke/sessionizer.wezterm",
-		setup = "apply_to_config",
-	},
+	-- workspace_switcher = {
+	-- 	url = "https://github.com/MLFlexer/smart_workspace_switcher.wezterm",
+	-- 	setup = "apply_to_config", -- or "setup"
+	-- },
+	-- resurrect = {
+	-- 	url = "https://github.com/MLFlexer/resurrect.wezterm",
+	-- 	setup = "apply_to_config",
+	-- },
+	-- sessionizer = {
+	-- 	url = "https://github.com/mikkasendke/sessionizer.wezterm",
+	-- 	setup = "apply_to_config",
+	-- },
 	smart_splits = {
 		url = "https://github.com/mrjones2014/smart-splits.nvim",
-		setup = "apply_to_config",
+		setup = "apply_to_config_with_merge",
 	},
-	tabline = {
-		url = "https://github.com/michaelbrusegard/tabline.wez",
-		setup = "none",
-	},
+	-- tabline = {
+	-- 	url = "https://github.com/michaelbrusegard/tabline.wez",
+	-- 	setup = "none",
+	-- },
 }
 
 local plugins = {}
@@ -44,6 +44,7 @@ for name, meta in pairs(plugin_sources) do
 		setup_type = meta.setup,
 		config = plugin.config or {},
 	}
+	wezterm.log_info("Loaded plugin: ", name)
 end
 
 return plugins
