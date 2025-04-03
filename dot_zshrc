@@ -45,6 +45,7 @@ setopt EXTENDED_GLOB
 # alias la='ls -lha'
 alias ls='eza --icons --group-directories-first'
 alias ll='eza -lh --icons --git'
+alias tree='eza -lh --icons --git --tree'
 alias "ls -lsa"='eza -lah --icons'
 alias ..='cd ..'
 alias ...='cd ../..'
