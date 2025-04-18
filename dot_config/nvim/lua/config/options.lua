@@ -15,6 +15,8 @@ o.cursorline = true
 o.signcolumn = "yes:2"
 o.timeoutlen = 200
 
+o.undofile = true
+
 o.tabstop = 2
 o.softtabstop = 2
 o.shiftwidth = 2
@@ -23,3 +25,6 @@ o.smartindent = true
 
 o.splitright = true
 o.splitbelow = true
+
+-- Recommended setting dor auto-session plugin
+o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
