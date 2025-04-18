@@ -1,0 +1,23 @@
+return {
+	-- "rmagatti/auto-session",
+	-- config = function()
+	-- 	vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+	-- 	require("auto-session").setup({
+	-- 		auto_restore = true,
+	-- 		auto_restore_last_session = true,
+	-- 		auto_save = true,
+	-- 		enabled = true,
+	-- 		log_level = "info",
+	-- 		root_dir = "/Users/martijn/.local/share/nvim/sessions/",
+	-- 		session_lens = {
+	-- 			load_on_setup = false,
+	-- 		},
+	-- 		vim.keymap.set(
+	-- 			"n",
+	-- 			"<leader>ls",
+	-- 			require("auto-session.session-lens").search_session,
+	-- 			{ desc = "Save session", noremap = true }
+	-- 		),
+	-- 	})
+	-- end,
+}
