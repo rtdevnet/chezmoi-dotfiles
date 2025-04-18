@@ -7,9 +7,13 @@ return {
 			integrations = {
 				-- lualine = true,
 				which_key = true,
+				treesitter = true,
 				native_lsp = { enabled = true },
 				cmp = true,
 				gitsigns = true,
+				mason = true,
+				snacks = true,
+				telescope = true,
 			},
 		})
 		vim.cmd.colorscheme("catppuccin")
