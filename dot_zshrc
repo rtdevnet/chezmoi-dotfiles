@@ -6,14 +6,24 @@ bindkey -e
 
 # Enable history file and append mode
 HISTFILE=~/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=100000
+SAVEHIST=100000
 setopt APPEND_HISTORY
 setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY  # Share history across sessions
+setopt HIST_FIND_NO_DUPS
 setopt HIST_IGNORE_ALL_DUPS  # Auto-remove duplicate entries in history
 setopt HIST_IGNORE_SPACE  # Ignore commands that start with a space from history
 setopt HIST_REDUCE_BLANKS  # Remove blank lines from history
+setopt HIST_EXPIRE_DUPS_FIRST
+
+# Add periodic flush with zshaddhistory
+autoload -Uz add-zsh-hook
+add-zsh-hook zshaddhistory history-flush
+
+function history-flush() {
+  fc -AI
+}
 
 # Load Homebrew shell environment (adds brew to PATH, MANPATH, etc.)
 if command -v brew &>/dev/null; then
@@ -114,4 +124,5 @@ source <(fzf --zsh)
 # eval "$(starship init zsh)"  
 eval "$(zoxide init zsh)"  
 eval "$(chezmoi completion zsh)"  
+eval "$(exercism completion zsh)"
 
