@@ -61,6 +61,8 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias gs="git status"
 alias brewup="brew update && brew upgrade && brew cleanup"
+# Make sure jrnl always is called with a leading space so it doesn't make the history
+alias jrnl=" jrnl"
 
 # Automatically change directory if you type a folder name
 setopt AUTO_CD
