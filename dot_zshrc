@@ -128,3 +128,5 @@ eval "$(zoxide init zsh)"
 eval "$(chezmoi completion zsh)"  
 eval "$(exercism completion zsh)"
 
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /opt/homebrew/bin/tofu tofu
