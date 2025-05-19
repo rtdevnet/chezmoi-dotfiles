@@ -61,6 +61,8 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias gs="git status"
 alias brewup="brew update && brew upgrade && brew cleanup"
+# Alias this for macos
+alias flushdns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
 # Make sure jrnl always is called with a leading space so it doesn't make the history
 alias jrnl=" jrnl"
 
