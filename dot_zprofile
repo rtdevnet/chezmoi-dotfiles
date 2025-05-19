@@ -1,1 +1,8 @@
+#/bin/date +%c | /opt/homebrew/bin/toilet -f smbraille -w "$(tput cols)" --metal | /opt/homebrew/bin/pv -qL 1000
+#echo "\n"
+#/opt/homebrew/bin/wego -l Waalre -d 0
 eval "$(/opt/homebrew/bin/brew shellenv)"
+$(which fastfetch)
+if command -v task > /dev/null 2>&1; then
+  task
+fi
