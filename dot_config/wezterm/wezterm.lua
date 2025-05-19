@@ -16,7 +16,9 @@ local ui = require("modules.ui")
 local keys = require("modules.keybindings")
 
 -- === Basic options ===
-config.font = fonts.get_font()
+local font_config = fonts.get_font_config()
+config.font = font_config.font
+config.font_rules = font_config.font_rules
 ui.apply(config)
 config.color_scheme = appearance.scheme_name()
 
