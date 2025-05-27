@@ -51,11 +51,10 @@ zstyle ':completion:*' list-colors '=(#b)black=31'  # Colorize matches
 setopt EXTENDED_GLOB
 
 # Aliases for convenience
-# alias ll='ls -lh'
-# alias la='ls -lha'
 alias ls='eza --icons --group-directories-first'
 alias ll='eza -lh --icons --git'
-alias tree='eza -lh --icons --git --tree'
+alias la='eza -lha --icons --git'
+alias tree='eza --icons --tree'
 alias "ls -lsa"='eza -lah --icons'
 alias ..='cd ..'
 alias ...='cd ../..'
