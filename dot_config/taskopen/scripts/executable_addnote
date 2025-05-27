@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Annotate a task with a Docusaurus-ready notes file (always .md).
+
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <task-id>"
+    exit 1
+fi
+
+ann="Notes.md"
+task "$1" annotate -- "$ann"
+

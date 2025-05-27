@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Open a Docusaurus-compatible Markdown note file for a Taskwarrior task.
+
+set -e
+
+if [ $# -ne 3 ]; then
+    echo "Usage: $0 <file-path> <description> <uuid>"
+    exit 1
+fi
+
+desc="$2"
+uuid="$3"
+dir="${TASKNOTE_DIR:-$HOME/tasknotes}"
+file="$dir/$uuid.md"
+date="$(date '+%Y-%m-%d')"
+
+mkdir -p "$dir"
+
+if [ ! -f "$file" ]; then
+    cat > "$file" <<EOF
+---
+id: $uuid
+title: "$desc"
+description: "$desc"
+date: $date
+tags: [taskwarrior]
+---
+
+# $desc
+
+- **Task UUID:** $uuid
+- **Created:** $date
+
+---
+
+EOF
+fi
+
+${EDITOR:-nvim} "$file"

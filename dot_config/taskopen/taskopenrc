@@ -1,0 +1,4 @@
+[General]
+EDITOR=nvim
+path_ext=~/.config/taskopen/scripts
+
